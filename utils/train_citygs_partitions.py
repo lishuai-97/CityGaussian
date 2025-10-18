@@ -71,7 +71,8 @@ def train_a_partition(
     args += [
         "-n={}".format(experiment_name),
         "--project", project_name,
-        "--logger", "wandb",
+        # "--logger", "wandb",
+        "--logger", "tensorboard",
     ]
 
     print_func = print

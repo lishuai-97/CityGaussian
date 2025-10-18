@@ -8,7 +8,7 @@ get_available_gpu() {
 
 COARSE_NAME=citygsv2_mc_aerial_coarse_sh2
 NAME=citygsv2_mc_aerial_sh2_trim
-PROJECT=YOUR_PROJECT_NAME  # Change to your project name
+PROJECT=matrix_city_aerial  # Change to your project name
 TEST_PATH=data/matrix_city/aerial/test/block_all_test  # required is train and test sets are separate
 
 # ============================================= downsample images =============================================
@@ -34,14 +34,14 @@ echo "GPU $gpu_id is available."
 CUDA_VISIBLE_DEVICES=$gpu_id python main.py fit \
                                     --config configs/$COARSE_NAME.yaml \
                                     -n $COARSE_NAME \
-                                    --logger wandb \
+                                    --logger tensorboard \
                                     --project $PROJECT \
                                     --data.train_max_num_images_to_cache 1024
 
 gpu_id=$(get_available_gpu)
 echo "GPU $gpu_id is available."
 CUDA_VISIBLE_DEVICES=$gpu_id python main.py test \
-    --config outputs/$COARSE_NAME/config.yaml \
+    --config outputs/$COARSE_NAME/lightning_logs/version_5/config.yaml \
     --data.path $TEST_PATH \
     --data.parser.eval_image_select_mode ratio \
     --data.parser.eval_ratio 1.0 \
@@ -77,7 +77,7 @@ CUDA_VISIBLE_DEVICES=$gpu_id python utils/merge_citygs_ckpts.py outputs/$NAME \
 gpu_id=$(get_available_gpu)
 echo "GPU $gpu_id is available."
 CUDA_VISIBLE_DEVICES=$gpu_id python main.py test \
-    --config outputs/$COARSE_NAME/config.yaml \
+    --config outputs/$COARSE_NAME/lightning_logs/version_5/config.yaml \
     -n $NAME \
     --data.path $TEST_PATH \
     --data.parser.eval_image_select_mode ratio \
